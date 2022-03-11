@@ -37,9 +37,9 @@ public class Events implements Listener {
 
         if(killedPlayer.getMaxHealth() <= 2) {
             BanList banList = Bukkit.getServer().getBanList(BanList.Type.NAME);
-            Calendar cal = Calendar.getInstance(); // creates calendar
-            cal.setTime(new Date());               // sets calendar time/date
-            cal.add(Calendar.HOUR_OF_DAY, LifeSteal.plugin.getConfig().getInt("KillBanTime"));      // adds one hour
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.HOUR_OF_DAY, LifeSteal.plugin.getConfig().getInt("KillBanTime"));
             BanEntry banEntry = banList.addBan(killedPlayer.getName(), "No health left", cal.getTime(), "LifeSteal");
             killedPlayer.kickPlayer("No health left");
             return;
@@ -74,5 +74,13 @@ public class Events implements Listener {
             event.getPlayer().sendMessage("§aYou feel stronger now");
             event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 1);
         }
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        player.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(120, 9));
+        player.addPotionEffect(PotionEffectType.REGENERATION.createEffect(120, 9));
+        player.addPotionEffect(PotionEffectType.SPEED.createEffect(120, 9));
     }
 }
