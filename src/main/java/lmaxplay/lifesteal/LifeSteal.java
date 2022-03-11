@@ -4,11 +4,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LifeSteal extends JavaPlugin {
 
+    static JavaPlugin plugin;
     @Override
     public void onEnable() {
         // Plugin startup logic
-        this.getCommand("health").setExecutor(new HealthCommand());
         this.getServer().getPluginManager().registerEvents(new Events(), this);
+        plugin = this;
+        this.saveDefaultConfig();
     }
 
     @Override
