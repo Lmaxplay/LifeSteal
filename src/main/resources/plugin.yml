@@ -1,0 +1,8 @@
+name: '${project.name}'
+version: '${project.version}'
+main: lmaxplay.lifesteal.LifeSteal
+api-version: 1.18
+
+commands:
+  health:
+    description: "Health command"
