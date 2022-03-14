@@ -4,74 +4,89 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.material.*;
 import org.bukkit.potion.*;
 
+import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.Date;
 
 public class Events implements Listener {
-    @SuppressWarnings( "deprecation" )
+
     @EventHandler(priority = EventPriority.HIGHEST)
+    @SuppressWarnings("ConstantConditions")
+    //@Nullable
     public void onKill(PlayerDeathEvent event) {
-        Entity killed = event.getEntity();
-        Entity killer = event.getEntity().getKiller();
+        Player killed = event.getEntity().getPlayer();
+        Player killer = event.getEntity().getKiller();
 
-        if(!(killed instanceof Player)) {
-            return;
-        }
+        if(killer == null) return;
 
-        if(!(killer instanceof Player)) {
-            return;
-        }
+        if(killer == killed) return;
 
-
-        Player killedPlayer = (Player)killed;
-        Player killerPlayer = (Player)killer;
-
-        if(killerPlayer == killedPlayer) return;
-
-        if(killedPlayer.getMaxHealth() <= 2) {
+        if(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() <= 2) {
             BanList banList = Bukkit.getServer().getBanList(BanList.Type.NAME);
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             cal.add(Calendar.HOUR_OF_DAY, LifeSteal.plugin.getConfig().getInt("KillBanTime"));
-            BanEntry banEntry = banList.addBan(killedPlayer.getName(), "No health left", cal.getTime(), "LifeSteal");
-            killedPlayer.kickPlayer("No health left");
+            /*BanEntry banEntry = */banList.addBan(killed.getName(), "No health left", cal.getTime(), "LifeSteal");
+            killed.kickPlayer("No health left");
             return;
         }
 
-        killerPlayer.setMaxHealth(killerPlayer.getMaxHealth() + 2);
-        killerPlayer.setHealth(killerPlayer.getMaxHealth());
-        killerPlayer.sendMessage("§aYou stole §ca heart§a from §b" + killedPlayer.getName() + "§a!");
-        killedPlayer.setMaxHealth(killedPlayer.getMaxHealth() - 2);
-        killedPlayer.sendMessage("§aYou lost §cone of your hearts§a due to §b" + killerPlayer.getName() + "§a!");
-        killedPlayer.setAbsorptionAmount(20);
-        killedPlayer.sendMessage("§aYou lost §cone of your hearts§a due to §b" + killerPlayer.getName() + "§a!");
+        killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2);
+        killer.setHealth(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        killer.sendMessage("§aYou stole §cA heart§a from §b" + killed.getName() + "§a!");
+        killed.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() - 2);
+        killed.sendMessage("§aYou lost §cone of your hearts§a due to §b" + killer.getName() + "§a!");
+        killed.setAbsorptionAmount(20);
+        killed.sendMessage("§aYou lost §cone of your hearts§a due to §b" + killer.getName() + "§a!");
 
-        // Add potion effects
-        killedPlayer.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(120, 9));
-        killedPlayer.addPotionEffect(PotionEffectType.REGENERATION.createEffect(120, 9));
-        killedPlayer.addPotionEffect(PotionEffectType.SPEED.createEffect(120, 9));
-
-        killedPlayer.kickPlayer("§aAutomatic kick for: §cLosing a heart\n§aPlease rejoin");
+        killed.kickPlayer("§aAutomatic kick for: §cLosing a heart\n§aPlease rejoin");
     }
 
-    @SuppressWarnings( "deprecation" )
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        Entity killed = event.getEntity();
+        Entity killer = event.getEntity().getKiller();
+
+        if( killed instanceof EnderDragon ) {
+            if(!(killer instanceof Player)) {
+                return;
+            }
+            Player killerPlayer = (Player)killer;
+            killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2);
+            killerPlayer.setHealth(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            killerPlayer.sendMessage("§aYou gained §cA heart§a from killing §bThe ender dragon!§a!");
+        }
+
+        if( killed instanceof Wither ) {
+            if(!(killer instanceof Player)) {
+                return;
+            }
+            Player killerPlayer = (Player)killer;
+            killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 1);
+            killerPlayer.setHealth(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            killerPlayer.sendMessage("§aYou gained §cA heart§a from killing §bThe Wither!§a!");
+        }
+    }
+
     @EventHandler
     public void onItemConsume(PlayerItemConsumeEvent event) {
         if(event.getItem().getType() == Material.ENCHANTED_GOLDEN_APPLE) {
             // Player ate an enchanted golden apple
-            event.getPlayer().setMaxHealth(
-                    event.getPlayer().getMaxHealth() + 2 // Change the number to the amount of health to add
+            event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(
+                    event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2 // Change the number to the amount of health to add
                 );
-            event.getPlayer().setHealth(event.getPlayer().getMaxHealth());
+            event.getPlayer().setHealth(event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             event.getPlayer().sendMessage("§aYou gained §ca new heart§a from the almighty §eenchanted golden apple§a!");
-            event.getPlayer().sendMessage("§aYou feel stronger now");
+            // event.getPlayer().sendMessage("§aYou feel stronger now");
             event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 1);
         }
     }
@@ -79,8 +94,8 @@ public class Events implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        player.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(120, 9));
-        player.addPotionEffect(PotionEffectType.REGENERATION.createEffect(120, 9));
-        player.addPotionEffect(PotionEffectType.SPEED.createEffect(120, 9));
+        player.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(2400, 9));
+        player.addPotionEffect(PotionEffectType.REGENERATION.createEffect(2400, 9));
+        player.addPotionEffect(PotionEffectType.SPEED.createEffect(2400, 4));
     }
 }
