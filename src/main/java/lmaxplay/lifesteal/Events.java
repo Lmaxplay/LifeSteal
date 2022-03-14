@@ -43,12 +43,12 @@ public class Events implements Listener {
         killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2);
         killer.setHealth(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         killer.sendMessage("§aYou stole §cA heart§a from §b" + killed.getName() + "§a!");
-        killed.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() - 2);
+        killed.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killed.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - 2);
         killed.sendMessage("§aYou lost §cone of your hearts§a due to §b" + killer.getName() + "§a!");
         killed.setAbsorptionAmount(20);
         killed.sendMessage("§aYou lost §cone of your hearts§a due to §b" + killer.getName() + "§a!");
 
-        killed.kickPlayer("§aAutomatic kick for: §cLosing a heart\n§aPlease rejoin");
+        // killed.kickPlayer("§aAutomatic kick for: §cLosing a heart\n§aPlease rejoin");
     }
 
     @EventHandler
@@ -61,7 +61,7 @@ public class Events implements Listener {
                 return;
             }
             Player killerPlayer = (Player)killer;
-            killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2);
+            killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 1);
             killerPlayer.setHealth(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             killerPlayer.sendMessage("§aYou gained §cA heart§a from killing §bThe ender dragon!§a!");
         }
@@ -73,7 +73,7 @@ public class Events implements Listener {
             Player killerPlayer = (Player)killer;
             killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 1);
             killerPlayer.setHealth(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-            killerPlayer.sendMessage("§aYou gained §cA heart§a from killing §bThe Wither!§a!");
+            killerPlayer.sendMessage("§aYou gained §cA heart§a from killing §bThe Wither§a!");
         }
     }
 
