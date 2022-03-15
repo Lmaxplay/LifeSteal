@@ -30,7 +30,7 @@ public class Events implements Listener {
 
         if(killer == killed) return;
 
-        if(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() <= 2) {
+        if(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() <= LifeSteal.plugin.getConfig().getInt("HealthGain.Kill")) {
             BanList banList = Bukkit.getServer().getBanList(BanList.Type.NAME);
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
