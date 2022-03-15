@@ -9,3 +9,6 @@ A: No, it contains unique features, like more ways to get hearts.
 
 Q: How do I report an issue?
 A: Report it as an issue in the Issues tab.
+
+Q: How do I report anython?
+A: Report it as an issue in the Suggestions tab.
