@@ -1,2 +1,7 @@
 KillBanTime: 24
-HardcoreHearts: true # NOT RECOMMENDED, glitches the respawn screen to show "spectate world" instead of "respawn"
+HardcoreHearts: False # NOT RECOMMENDED, glitches the respawn screen to show "spectate world" instead of "respawn"
+HealthGain:
+  Kill: 2
+  EnchantedGoldenApple: 2
+  Wither: 1
+  EnderDragon: 1

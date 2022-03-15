@@ -40,10 +40,10 @@ public class Events implements Listener {
             return;
         }
 
-        killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2);
+        killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + LifeSteal.plugin.getConfig().getInt("HealthGain.Kill"));
         killer.setHealth(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         killer.sendMessage("§aYou stole §cA heart§a from §b" + killed.getName() + "§a!");
-        killed.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killed.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - 2);
+        killed.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killed.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - LifeSteal.plugin.getConfig().getInt("HealthGain.Kill"));
         killed.sendMessage("§aYou lost §cone of your hearts§a due to §b" + killer.getName() + "§a!");
         killed.setAbsorptionAmount(20);
         killed.sendMessage("§aYou lost §cone of your hearts§a due to §b" + killer.getName() + "§a!");
@@ -61,7 +61,10 @@ public class Events implements Listener {
                 return;
             }
             Player killerPlayer = (Player)killer;
-            killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 1);
+            if(LifeSteal.plugin.getConfig().getInt("HealthGain.EnderDragon") == 0) {
+                return;
+            }
+            killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + LifeSteal.plugin.getConfig().getInt("HealthGain.EnderDragon"));
             killerPlayer.setHealth(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             killerPlayer.sendMessage("§aYou gained §cA heart§a from killing §bThe ender dragon!§a!");
         }
@@ -71,7 +74,10 @@ public class Events implements Listener {
                 return;
             }
             Player killerPlayer = (Player)killer;
-            killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 1);
+            if(LifeSteal.plugin.getConfig().getInt("HealthGain.Wither") == 0) {
+                return;
+            }
+            killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + LifeSteal.plugin.getConfig().getInt("HealthGain.Wither"));
             killerPlayer.setHealth(killerPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             killerPlayer.sendMessage("§aYou gained §cA heart§a from killing §bThe Wither§a!");
         }
@@ -81,9 +87,11 @@ public class Events implements Listener {
     public void onItemConsume(PlayerItemConsumeEvent event) {
         if(event.getItem().getType() == Material.ENCHANTED_GOLDEN_APPLE) {
             // Player ate an enchanted golden apple
+            if(LifeSteal.plugin.getConfig().getInt("HealthGain.EnchantedGoldenApple") == 0) {
+                return;
+            }
             event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(
-                    event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2 // Change the number to the amount of health to add
-                );
+                    event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + LifeSteal.plugin.getConfig().getInt("HealthGain.EnchantedGoldenApple"));
             event.getPlayer().setHealth(event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             event.getPlayer().sendMessage("§aYou gained §ca new heart§a from the almighty §eenchanted golden apple§a!");
             // event.getPlayer().sendMessage("§aYou feel stronger now");
