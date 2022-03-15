@@ -3,7 +3,7 @@
 
 But with more care and love
 
-Download at [SpigotMC]https://www.spigotmc.org/resources/simple-livesteal.100712
+Download at [SpigotMC](https://www.spigotmc.org/resources/simple-livesteal.100712)
 
 ## Q & A
 Q: Is this like every other lifesteal plugin?
