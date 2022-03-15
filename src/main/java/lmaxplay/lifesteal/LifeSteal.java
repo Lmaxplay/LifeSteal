@@ -30,7 +30,7 @@ public final class LifeSteal extends JavaPlugin {
         if(protocolManager != null) {
             LPacketListener.register(this, protocolManager);
         } else {
-            logger.log(Level.INFO, "ProtocolManager = NULL");
+            logger.log(Level.INFO, "ProtocolLib doesn't seem to be installed, maybe try to update it?");
         }
         this.saveDefaultConfig();
     }
