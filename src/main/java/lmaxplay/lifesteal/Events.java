@@ -102,8 +102,5 @@ public class Events implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        //player.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(2400, 9));
-        //player.addPotionEffect(PotionEffectType.REGENERATION.createEffect(2400, 9));
-        //player.addPotionEffect(PotionEffectType.SPEED.createEffect(2400, 4));
     }
 }
